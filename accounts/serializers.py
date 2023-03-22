@@ -25,9 +25,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
 class ProjectSerializer(serializers.ModelSerializer):
+    
     class Meta:
        model = Project 
-       fields = ('name','signup')
+       fields = ('name','signup')       
+
+    def create(self, validated_data):
+        
+        instance = super().create(validated_data)
+        raw_password = validated_data.get('password')
+        instance.set_password(raw_password)
+        instance.save()
+        return instance
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:

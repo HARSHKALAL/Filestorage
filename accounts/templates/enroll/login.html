@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <title>File Storage</title>
+</head>
+
+<body>
+    <center>
+        <h1>SIGN IN</h1>
+    </center>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="email" class="form-control" id="email" placeholder="Email">
+            </div>
+            <div class="col-md-6">
+                <input type="password" class="form-control" id="password" placeholder="Password">
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <center><button type="button" class="btn btn-primary btn-lg" onclick="signIn()">Login</button></center>
+    </div>
+</body>
+<script>
+    function signIn() {
+        console.log("clicked")
+        email = document.getElementById("email").value;
+        password = document.getElementById("password").value;
+        var csrf_token = "{{csrf_token }}";
+        let data = { email: email, password: password };
+        $.ajax({
+            type: "POST",
+            headers: { "X-CSRFToken": csrf_token },
+            url: "http://127.0.0.1:8000/api/login/",
+            data: data,
+            success: function (data) {
+                console.log("successfuly")
+                localStorage.setItem("token", data.token)
+                window.location.href = 'http://127.0.0.1:8000/homepage/'
+            },
+        });
+    }
+</script>
+
+</html>

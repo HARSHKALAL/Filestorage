@@ -15,8 +15,12 @@ from knox.views import LoginView as KnoxLoginView
 from rest_framework.permissions import IsAuthenticated
 
 class RegistrationApi(APIView):
-    def get(self,request):
-        return Response({"message":"called api GET"}, status=status.HTTP_200_OK)
+
+    permission_classes = [IsAuthenticated]       
+    def get(self,request): 
+        queryset = Signup.objects.filter(id=request.user.id)
+        serializer = RegisterSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self,request):
         serializer = RegisterSerializer(data=request.data)
@@ -28,8 +32,8 @@ class RegistrationApi(APIView):
 class ProjectApi(generics.ListCreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]
-    
+    permission_classes = [IsAuthenticated]       
+
 class ReviewAPi(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
@@ -42,7 +46,9 @@ class LoginAPIView(knox_views.LoginView):
         serializer = self.serializer_class(data=request.data)                
         if serializer.is_valid(raise_exception=True):
             user = serializer.validated_data['user']
-            response = super().post(request, format=None)
+            login(request, user)    
+            response = super().post(request,format=None)
         else:
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(response.data, status=status.HTTP_200_OK)
+        # response.data['user']= serializer.data['email']
+        return Response(response.data,status=status.HTTP_200_OK)

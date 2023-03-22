@@ -5,3 +5,6 @@ def homepage(request):
 
 def register(request):
     return render(request,"enroll/registration.html")
+
+def signin(request):
+    return render(request,"enroll/login.html")

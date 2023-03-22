@@ -10,9 +10,9 @@ urlpatterns = [
 ]
 
 templates_urlpatterns = [
-    path("",homepage,name="homepage"),
+    path("homepage/",homepage,name="homepage"),
     path("register/",register,name="register"),
-
+    path("signin/",signin,name="signin"),
 ]
 
 urlpatterns += templates_urlpatterns
