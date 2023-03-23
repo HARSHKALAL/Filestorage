@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import pathlib
+import random
 
 class Signup(AbstractUser):
     date_of_birth = models.DateField(null=True)
@@ -21,12 +22,16 @@ class Project(models.Model):
         return self.name
 
 class Review(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,blank=True,null=True)
     project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name="projectReview")
     date = models.DateTimeField(auto_now_add=True)    
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.name = "Review Step" + str(random.randrange(000,999))
+        super(Review, self).save(*args, **kwargs) 
 
 class UploadFiles(models.Model):
     file = models.FileField(upload_to="files/")

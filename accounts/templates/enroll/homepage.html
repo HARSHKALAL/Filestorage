@@ -43,11 +43,9 @@
     <div class="container">
         <button type="button" class="btn btn-primary" onclick="openModal(event)">Create
             Project</button>
-        <select name="cars" id="cars">
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
+        <select name="project" id="projectName" onchange="reviewDetail()">
         </select>
-        <button type="button" class="btn btn-primary">Add Review</button>
+        <button type="button" class="btn btn-primary" onclick="createReview()">Add Review</button>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -76,6 +74,12 @@
             </div>
         </div>
     </div>
+    <br>
+    <div class="container" id="review">
+
+    </div>
+
+
 </body>
 
 </html>
@@ -117,4 +121,106 @@
             },
         });
     }
+
+    $.ajax({
+        type: "GET",
+        headers: { "Authorization": `Token ${token}` },
+        url: "http://127.0.0.1:8000/api/project/",
+        success: function (data) {
+            output = " "
+            for (i = 0; i < data.length; i++) {
+                output += `<option value="${data[i].id}">${data[i].name}</option>`
+            }
+            $("#projectName").html(output);
+
+        },
+    });
+
+    function selectNum() {
+        var getValue = document.getElementById('projectName').selectedOptions[0].value;
+        return getValue
+    }
+
+    function createReview() {
+        var csrf_token = "{{csrf_token }}";
+        data = { project: selectNum() }
+        $.ajax({
+            type: "POST",
+            headers: { "X-CSRFToken": csrf_token, "Authorization": `Token ${token}` },
+            url: "http://127.0.0.1:8000/api/review/",
+            data: data,
+            success: function (data) {
+                data = { project: selectNum() }
+                $.ajax({
+                    type: "GET",
+                    headers: { "Authorization": `Token ${token}` },
+                    url: "http://127.0.0.1:8000/api/review/",
+                    data: data,
+                    success: function (data) {
+                        console.log(data)
+                        output = ""
+                        for (i = 0; i < data.length; i++) {
+                            output += `
+<div class="card" style="width: 18rem;">
+   <div class="card-body">
+      <span>${data[i].name}</span>
+   </div>
+</div>
+<div class="input-group mb-3">
+   <div class="input-group-prepend">
+      <span class="input-group-text">Upload</span>
+   </div>
+   <div class="custom-file">
+      <input type="file" class="custom-file-input" id="inputGroupFile01">
+   </div>
+</div>
+`
+                        }
+                        $("#review").html(output);
+
+                    },
+                });
+
+
+
+            },
+        });
+    }
+
+    function reviewDetail() {
+        var reviewData = { project: selectNum() }
+        $.ajax({
+            type: "GET",
+            headers: { "Authorization": `Token ${token}` },
+            url: "http://127.0.0.1:8000/api/review/",
+            data: reviewData,
+            success: function (data) {
+                output = ""
+                for (i = 0; i < data.length; i++) {
+                    output += `
+<div class="card" style="width: 18rem;">
+   <div class="card-body">
+      <span>${data[i].name}</span>
+   </div>
+</div>
+<div class="input-group mb-3">
+   <div class="input-group-prepend">
+      <span class="input-group-text">Upload</span>
+   </div>
+   <div class="custom-file">
+      <input type="file" class="custom-file-input" onclick="addFile('${data[i].id}')">
+   </div>
+</div>
+`
+                }
+                $("#review").html(output);
+            },
+        });
+    }
+
+    function addFile(id) {
+        console.log(id)
+        console.log("upload Image")
+    }
+
 </script>

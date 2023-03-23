@@ -30,13 +30,35 @@ class RegistrationApi(APIView):
         return Response({"errors":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class ProjectApi(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]   
+    serializer_class  = ProjectSerializer
     queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]       
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.dict()
+        data.update({"signup": request.user.id})
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(Project.objects.filter(signup_id=request.user.id))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class ReviewAPi(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(Review.objects.filter(project_id=int(request.GET.get('project'))))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 
 class LoginAPIView(knox_views.LoginView):
     permission_classes = (AllowAny, )
@@ -50,5 +72,4 @@ class LoginAPIView(knox_views.LoginView):
             response = super().post(request,format=None)
         else:
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        # response.data['user']= serializer.data['email']
         return Response(response.data,status=status.HTTP_200_OK)

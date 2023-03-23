@@ -24,20 +24,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         attrs.pop('confirm_password')
         return attrs
 
-class ProjectSerializer(serializers.ModelSerializer):
-    
+class ProjectSerializer(serializers.ModelSerializer):    
     class Meta:
-       model = Project 
-       fields = ('name','signup')       
-
-    def create(self, validated_data):
-        
-        instance = super().create(validated_data)
-        raw_password = validated_data.get('password')
-        instance.set_password(raw_password)
-        instance.save()
-        return instance
-
+        model = Project 
+        fields = "__all__"
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
