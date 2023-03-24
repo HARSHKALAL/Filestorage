@@ -1,22 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import *
-from rest_framework import viewsets
-from .models import *
+from .serializers import RegisterSerializer,ProjectSerializer,ReviewSerializer,LoginSerializer
+from .models import Signup,Project,Review
 from rest_framework import generics
-from rest_framework.permissions import AllowAny
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from knox.auth import AuthToken
 from knox import views as knox_views
-from knox.auth import TokenAuthentication
 from django.contrib.auth import login
-from knox.views import LoginView as KnoxLoginView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
+
 
 class RegistrationApi(APIView):
-
+    
     permission_classes = [IsAuthenticated]       
+    
     def get(self,request): 
         queryset = Signup.objects.filter(id=request.user.id)
         serializer = RegisterSerializer(queryset, many=True)
@@ -29,7 +25,9 @@ class RegistrationApi(APIView):
             return Response({"userCreated": serializer.data}, status=status.HTTP_201_CREATED)
         return Response({"errors":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ProjectApi(generics.ListCreateAPIView):
+    
     permission_classes = [IsAuthenticated]   
     serializer_class  = ProjectSerializer
     queryset = Project.objects.all()
@@ -50,6 +48,7 @@ class ProjectApi(generics.ListCreateAPIView):
 
 
 class ReviewAPi(generics.ListCreateAPIView):
+    
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
@@ -59,8 +58,8 @@ class ReviewAPi(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
-
 class LoginAPIView(knox_views.LoginView):
+    
     permission_classes = (AllowAny, )
     serializer_class = LoginSerializer
 

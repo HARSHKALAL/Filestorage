@@ -39,7 +39,6 @@
         </div>
     </nav>
     </div>
-
     <div class="container">
         <button type="button" class="btn btn-primary" onclick="openModal(event)">Create
             Project</button>
@@ -76,14 +75,10 @@
     </div>
     <br>
     <div class="container" id="review">
-
     </div>
-
-
 </body>
 
 </html>
-
 <script>
     token = localStorage.getItem("token")
     $.ajax({
@@ -157,7 +152,6 @@
                     url: "http://127.0.0.1:8000/api/review/",
                     data: data,
                     success: function (data) {
-                        console.log(data)
                         output = ""
                         for (i = 0; i < data.length; i++) {
                             output += `
@@ -195,6 +189,8 @@
             url: "http://127.0.0.1:8000/api/review/",
             data: reviewData,
             success: function (data) {
+
+
                 output = ""
                 for (i = 0; i < data.length; i++) {
                     output += `
@@ -208,19 +204,14 @@
       <span class="input-group-text">Upload</span>
    </div>
    <div class="custom-file">
-      <input type="file" class="custom-file-input" onclick="addFile('${data[i].id}')">
+      <input type="file" class="custom-file-input">
    </div>
 </div>
 `
                 }
+
                 $("#review").html(output);
             },
         });
     }
-
-    function addFile(id) {
-        console.log(id)
-        console.log("upload Image")
-    }
-
 </script>

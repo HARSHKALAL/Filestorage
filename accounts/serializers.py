@@ -1,4 +1,4 @@
-from .models import *
+from .models import Signup,Project,Review,UploadFiles
 from rest_framework import serializers
 from django.contrib.auth import  authenticate
 
@@ -32,7 +32,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review 
-        fields = ('name','project')
+        fields = ('id','name','project')
 
 class UploadFilesSerializer(serializers.ModelSerializer):
     class Meta:
