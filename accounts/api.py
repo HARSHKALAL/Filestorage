@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import RegisterSerializer,ProjectSerializer,ReviewSerializer,LoginSerializer
+from .serializers import RegisterSerializer,ProjectSerializer,ReviewSerializer,LoginSerializer,UploadFilesSerializer
 from .models import Signup,Project,Review
 from rest_framework import generics
 from knox import views as knox_views
@@ -9,9 +9,7 @@ from django.contrib.auth import login
 from rest_framework.permissions import IsAuthenticated,AllowAny
 
 
-class RegistrationApi(APIView):
-    
-    permission_classes = [IsAuthenticated]       
+class RegistrationApi(APIView):   
     
     def get(self,request): 
         queryset = Signup.objects.filter(id=request.user.id)
@@ -26,8 +24,7 @@ class RegistrationApi(APIView):
         return Response({"errors":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ProjectApi(generics.ListCreateAPIView):
-    
+class ProjectApi(generics.ListCreateAPIView):    
     permission_classes = [IsAuthenticated]   
     serializer_class  = ProjectSerializer
     queryset = Project.objects.all()
@@ -45,7 +42,7 @@ class ProjectApi(generics.ListCreateAPIView):
         queryset = self.filter_queryset(Project.objects.filter(signup_id=request.user.id))
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
+        
 
 class ReviewAPi(generics.ListCreateAPIView):
     
@@ -58,9 +55,15 @@ class ReviewAPi(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 
+class UploadFileApi(generics.ListCreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = UploadFilesSerializer
+
+
+
 class LoginAPIView(knox_views.LoginView):
     
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
 
     def post(self, request, format=None):
@@ -69,6 +72,6 @@ class LoginAPIView(knox_views.LoginView):
             user = serializer.validated_data['user']
             login(request, user)    
             response = super().post(request,format=None)
-        else:
-            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        else:            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(response.data,status=status.HTTP_200_OK)

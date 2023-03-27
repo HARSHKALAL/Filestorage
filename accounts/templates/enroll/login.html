@@ -18,6 +18,8 @@
     <center>
         <h1>SIGN IN</h1>
     </center>
+
+
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -28,7 +30,7 @@
             </div>
         </div>
     </div>
-
+    <span id="error" style="color:red"></span>
     <br>
     <center><button type="button" class="btn btn-primary btn-lg" onclick="signIn()">Login</button></center>
     </div>
@@ -45,13 +47,18 @@
             headers: { "X-CSRFToken": csrf_token },
             url: "http://127.0.0.1:8000/api/login/",
             data: data,
+            error: function (err) {
+                $("#error").html(err.responseJSON.non_field_errors[0]);
+            },
             success: function (data) {
                 console.log("successfuly")
                 localStorage.setItem("token", data.token)
                 window.location.href = 'http://127.0.0.1:8000/homepage/'
-            },
+            }
+
         });
     }
+
 </script>
 
 </html>

@@ -37,7 +37,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class UploadFilesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadFiles
-        fields = ('file')        
+        fields = ('file','review')        
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -47,15 +47,13 @@ class LoginSerializer(serializers.Serializer):
         email = attrs.get('email').lower()
         password = attrs.get('password')
 
-        if not email or not password:
-            raise serializers.ValidationError("Please give both email and password.")
-
         if not Signup.objects.filter(email=email).exists():
             raise serializers.ValidationError('Email does not exist.')
-        
+                
         user = authenticate(request=self.context.get('request'), email=email,password=password)
         
         if not user:
-            raise serializers.ValidationError("Wrong Credentials.")
+            raise serializers.ValidationError("Enter Valid Password.")
+        
         attrs['user']=user      
         return attrs

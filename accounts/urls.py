@@ -7,6 +7,7 @@ urlpatterns = [
     path("api/project/",ProjectApi.as_view(),name='ProjectApi'),   
     path("api/review/",ReviewAPi.as_view(),name='ReviewApi'), 
     path("api/login/", LoginAPIView.as_view(),name='knox_login'),
+    path("api/uploadFile/",UploadFileApi.as_view(),name = 'uploadfile')
 ]
 
 templates_urlpatterns = [

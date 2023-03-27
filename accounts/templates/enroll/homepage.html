@@ -42,8 +42,8 @@
     <div class="container">
         <button type="button" class="btn btn-primary" onclick="openModal(event)">Create
             Project</button>
-        <select name="project" id="projectName" onchange="reviewDetail()">
-        </select>
+        <div id="selectProject">
+        </div>
         <button type="button" class="btn btn-primary" onclick="createReview()">Add Review</button>
     </div>
     <!-- Modal -->
@@ -122,11 +122,17 @@
         headers: { "Authorization": `Token ${token}` },
         url: "http://127.0.0.1:8000/api/project/",
         success: function (data) {
-            output = " "
-            for (i = 0; i < data.length; i++) {
-                output += `<option value="${data[i].id}">${data[i].name}</option>`
+
+            output = ""
+            outputData = " "
+            if (data.length > 0) {
+                for (i = 0; i < data.length; i++) {
+                    output += `<option value="${data[i].id}">${data[i].name}</option>`
+                }
+                outputData = `<select name="project" id="projectName" onchange="reviewDetail()">${output}</select>`
+
             }
-            $("#projectName").html(output);
+            $("#selectProject").html(outputData);
 
         },
     });
@@ -189,8 +195,6 @@
             url: "http://127.0.0.1:8000/api/review/",
             data: reviewData,
             success: function (data) {
-
-
                 output = ""
                 for (i = 0; i < data.length; i++) {
                     output += `
@@ -201,17 +205,38 @@
 </div>
 <div class="input-group mb-3">
    <div class="input-group-prepend">
-      <span class="input-group-text">Upload</span>
+      <button type="button" onclick="UploadFile('${data[i].id}')">Upload</button>
    </div>
    <div class="custom-file">
-      <input type="file" class="custom-file-input">
+      <input type="file" class="custom-file-input" id="file${data[i].id}">
    </div>
 </div>
 `
                 }
-
                 $("#review").html(output);
             },
         });
     }
+
+    function UploadFile(id) {
+        var a = document.getElementById(`file${id}`).files[0];
+        var data = new FormData();
+        data.append("file", a)
+        data.append("review", id)
+        data.append("csrfmiddlewaretoken", '{{ csrf_token }}')
+
+        $.ajax({
+            type: 'POST',
+            url: "http://127.0.0.1:8000/api/uploadFile/",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function (data) {
+                console.log(data)
+            }
+        });
+
+    }
+
 </script>
