@@ -35,7 +35,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('id','name','project')
 
 class UploadFilesSerializer(serializers.ModelSerializer):
-    review = ReviewSerializer(read_only=True,many=True)
     name = serializers.CharField(read_only=True)
     class Meta:
         model = UploadFiles

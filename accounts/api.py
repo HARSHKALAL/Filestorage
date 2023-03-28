@@ -49,11 +49,17 @@ class ReviewAPi(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
+    # OVERRIDING get_queryset method
+    def get_queryset(self):
+        qs = super().get_queryset()
+        pk=self.request.query_params.get('project')
+        return qs.filter(project_id=int(pk))
+
     def list(self, request, *args, **kwargs):
-        breakpoint()
-        queryset = self.filter_queryset(Review.objects.filter(project_id=int(request.GET.get('project'))))
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset,many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UploadFileApi(generics.ListCreateAPIView):
