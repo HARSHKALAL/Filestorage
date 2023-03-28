@@ -50,6 +50,7 @@ class ReviewAPi(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
 
     def list(self, request, *args, **kwargs):
+        breakpoint()
         queryset = self.filter_queryset(Review.objects.filter(project_id=int(request.GET.get('project'))))
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)

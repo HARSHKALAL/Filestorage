@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
 ]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

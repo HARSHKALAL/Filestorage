@@ -74,7 +74,9 @@
         </div>
     </div>
     <br>
-    <div class="container" id="review">
+    <div class="container">
+        <div class="row" id="review">
+        </div>
     </div>
 </body>
 
@@ -91,6 +93,7 @@
             $("#userName").html(output);
         },
     });
+
 
     function openModal(e) {
         e.preventDefault();
@@ -130,10 +133,8 @@
                     output += `<option value="${data[i].id}">${data[i].name}</option>`
                 }
                 outputData = `<select name="project" id="projectName" onchange="reviewDetail()">${output}</select>`
-
             }
             $("#selectProject").html(outputData);
-
         },
     });
 
@@ -180,9 +181,6 @@
 
                     },
                 });
-
-
-
             },
         });
     }
@@ -195,28 +193,36 @@
             url: "http://127.0.0.1:8000/api/review/",
             data: reviewData,
             success: function (data) {
+                console.log(data)
                 output = ""
                 for (i = 0; i < data.length; i++) {
                     output += `
+                    <div class="col">
 <div class="card" style="width: 18rem;">
    <div class="card-body">
       <span>${data[i].name}</span>
    </div>
 </div>
-<div class="input-group mb-3">
+<div class="col-md-4">
    <div class="input-group-prepend">
       <button type="button" onclick="UploadFile('${data[i].id}')">Upload</button>
    </div>
-   <div class="custom-file">
+   
       <input type="file" class="custom-file-input" id="file${data[i].id}">
+</div>
+<div class="card" style="width: 18rem;">
+   <div class="card-body">
+      <span>In Review</span>      
    </div>
 </div>
-`
-                }
+<br>
+</div>
+`                }
                 $("#review").html(output);
             },
         });
     }
+
 
     function UploadFile(id) {
         var a = document.getElementById(`file${id}`).files[0];
@@ -237,5 +243,4 @@
             }
         });
     }
-
 </script>
