@@ -34,6 +34,8 @@ class Review(models.Model):
         self.name = "Review Step" + str(random.randrange(000,999))
         super(Review, self).save(*args, **kwargs) 
 
+
+
 class UploadFiles(models.Model):
     file = models.FileField(upload_to="files/")
     name = models.CharField(max_length=100,blank=True,null=True)

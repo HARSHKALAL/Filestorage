@@ -2,15 +2,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import RegisterSerializer,ProjectSerializer,ReviewSerializer,LoginSerializer,UploadFilesSerializer
-from .models import Signup,Project,Review
+from .models import Signup,Project,Review,UploadFiles
 from rest_framework import generics
 from knox import views as knox_views
 from django.contrib.auth import login
 from rest_framework.permissions import IsAuthenticated,AllowAny
 
 
-class RegistrationApi(APIView):   
-    
+class RegistrationApi(APIView):       
     def get(self,request): 
         queryset = Signup.objects.filter(id=request.user.id)
         serializer = RegisterSerializer(queryset, many=True)
@@ -44,28 +43,19 @@ class ProjectApi(generics.ListCreateAPIView):
         return Response(serializer.data)
         
 
-class ReviewAPi(generics.ListCreateAPIView):
-    
+class ReviewAPi(generics.ListCreateAPIView):    
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    # OVERRIDING get_queryset method
-    def get_queryset(self):
-        qs = super().get_queryset()
-        pk=self.request.query_params.get('project')
-        return qs.filter(project_id=int(pk))
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+    def list(self, request, *args, **kwargs): 
+        queryset = self.filter_queryset(Review.objects.filter(project_id =self.request.query_params.get('project')))
         serializer = self.get_serializer(queryset,many=True)
-        
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UploadFileApi(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = UploadFilesSerializer
-
 
 
 class LoginAPIView(knox_views.LoginView):

@@ -194,8 +194,11 @@
             data: reviewData,
             success: function (data) {
                 console.log(data)
+                console.log(data[0].photo.length)
                 output = ""
+                outputPhoto = ""
                 for (i = 0; i < data.length; i++) {
+
                     output += `
                     <div class="col">
 <div class="card" style="width: 18rem;">
@@ -209,20 +212,23 @@
    </div>
    
       <input type="file" class="custom-file-input" id="file${data[i].id}">
-</div>
-<div class="card" style="width: 18rem;">
+</div>`
+                    for (j = 0; j < data[i].photo.length; j++) {
+                        outputPhoto += `<div class="card" style="width: 18rem;">
    <div class="card-body">
-      <span>In Review</span>      
+    <img src="${data[i].photo[j].file}" width="50" height="50">  
+    <span>${data[i].photo[j].name}</span>
+    <span>${data[i].name}</span>   
    </div>
-</div>
-<br>
-</div>
-`                }
-                $("#review").html(output);
+</div>`
+                    }
+                }
+
+                final = output + outputPhoto
+                $("#review").html(final);
             },
         });
     }
-
 
     function UploadFile(id) {
         var a = document.getElementById(`file${id}`).files[0];
@@ -239,8 +245,9 @@
             processData: false,
             data: data,
             success: function (data) {
-                console.log(data)
+                reviewDetail()
             }
         });
     }
+
 </script>

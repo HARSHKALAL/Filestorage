@@ -29,16 +29,28 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project 
         fields = "__all__"
 
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review 
-        fields = ('id','name','project')
-
 class UploadFilesSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
     class Meta:
         model = UploadFiles
-        fields = ('file','name','review')        
+        fields = ('file','name','review')   
+
+   
+
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    photo = UploadFilesSerializer(many=True,read_only=True)
+    class Meta:
+        model = Review 
+        fields = ('id','name','project')
+
+    # def to_representation(self, instance):
+    #     ret = super().to_representation(instance)
+    #     breakpoint()
+    #     ret['photo'] = instance.reviewUploadfiles.all().values()
+    #     return ret
+
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
