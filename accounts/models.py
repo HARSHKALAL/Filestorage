@@ -33,8 +33,10 @@ class Review(models.Model):
     def save(self, *args, **kwargs):
         self.name = "Review Step" + str(random.randrange(000,999))
         super(Review, self).save(*args, **kwargs) 
-
-
+    
+    # @property
+    # def photo(self):
+    #     return self.reviewUploadfiles.all()
 
 class UploadFiles(models.Model):
     file = models.FileField(upload_to="files/")
