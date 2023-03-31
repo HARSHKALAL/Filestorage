@@ -9,18 +9,21 @@ function ajaxPostRequest(url, data, errorCallback, successCallback) {
     });
 }
 
-
-function ajaxGetRequest(method, token, url, data, errorCallback, successCallback) {
+function ajaxGetRequest(token, url, successCallback) {
     $.ajax({
-        type: method,
-        headers: { "X-CSRFToken": token },
+        type: "GET",
+        headers: { "Authorization": `Token ${token}` },
         url: url,
-        data: data,
-        error: errorCallback,
         success: successCallback,
     });
 }
 
-
-
-
+function ajaxPostAuthenticationRequest(token, url, data, successCallback) {
+    $.ajax({
+        type: "POST",
+        headers: { "X-CSRFToken": "{{csrf_token}}", "Authorization": `Token ${token}` },
+        url: url,
+        data: data,
+        success: successCallback,
+    });
+}

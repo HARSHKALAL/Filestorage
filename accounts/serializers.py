@@ -1,6 +1,7 @@
 from .models import Signup,Project,Review,UploadFiles
 from rest_framework import serializers
 from django.contrib.auth import  authenticate
+from .models import *
 
 class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(max_length=255,write_only=True)
@@ -34,7 +35,7 @@ class UploadFilesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadFiles
         fields = ('file','name','review')   
-        
+
 class ReviewSerializer(serializers.ModelSerializer):
     # photo = UploadFilesSerializer(many=True,read_only=True)
     class Meta:
@@ -43,6 +44,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
+    
         ret['photo'] = instance.reviewUploadfiles.all().values()
         return ret
 
