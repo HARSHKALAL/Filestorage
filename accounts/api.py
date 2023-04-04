@@ -47,11 +47,10 @@ class ReviewAPi(generics.ListCreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    def list(self, request, *args, **kwargs): 
+    def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(Review.objects.filter(project_id =self.request.query_params.get('project')))
         serializer = self.get_serializer(queryset,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class UploadFileApi(generics.ListCreateAPIView):
     queryset = Review.objects.all()
@@ -59,7 +58,7 @@ class UploadFileApi(generics.ListCreateAPIView):
 
 
 class LoginAPIView(knox_views.LoginView):
-    
+                                                   
     permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
 
