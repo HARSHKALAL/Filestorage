@@ -7,7 +7,7 @@ from rest_framework.settings import api_settings
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-2h@9_3sq9enyx8+0z^pm&%q+f0xwfp-ooq_uy(ggr_v1%=^@m!"
 DEBUG = True
-ALLOWED_HOSTS = ['testserver']
+ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

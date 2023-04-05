@@ -57,8 +57,7 @@ class UploadFileApi(generics.ListCreateAPIView):
     serializer_class = UploadFilesSerializer
 
 
-class LoginAPIView(knox_views.LoginView):
-                                                   
+class LoginAPIView(knox_views.LoginView):                                               
     permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
 
@@ -68,6 +67,4 @@ class LoginAPIView(knox_views.LoginView):
             user = serializer.validated_data['user']
             login(request, user)    
             response = super().post(request,format=None)
-        else:            
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(response.data,status=status.HTTP_200_OK)

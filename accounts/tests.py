@@ -12,6 +12,10 @@ class test_Signup(TestCase):
     def test_user_post(self):
         response = self.client.post(reverse('RegistrationApi'),data={'first_name':'harsh','last_name':'kalal', 'email':'harshkalal2125@gmail.com','date_of_birth':'1997-11-11','password':'Hsbfk@1997','confirm_password':'Hsbfk@1997'})
         self.assertEqual(response.status_code, 201)
+
+    def test_invalid_user_post(self):
+        response = self.client.post(reverse('RegistrationApi'),data={'first_name':'harsh','last_name':'kalal', 'email':'harshkalal2125@gmail.com','date_of_birth':'1997-11-11','password':'Hsbfk@1997'})
+        self.assertEqual(response.status_code, 400)
         
     def test_user_get(self):
         response = self.client.get('/api/register/')
@@ -56,11 +60,12 @@ class test_review(TestCase):
 class test_login(TestCase):
     def setUp(self):
         self.api_client = APIClient()
-        self.user = Signup.objects.create(first_name='harsh', last_name='patel', email='harshkalal2125@gmail.com',date_of_birth='1997-11-11',password='Kalal@1997')                
-        # self.token = AuthToken.objects.create(user=self.user)
+        self.user = self.api_client.post(reverse('RegistrationApi'),{'first_name':'harsh', 'last_name':'patel', 'email':'harshkalal2125@gmail.com','date_of_birth':'1997-11-11','password':'Kalal@1997','confirm_password':'Kalal@1997'})                
 
     def test_valid_post(self):
-        self.api_client.force_login(self.user)
-        response = self.api_client.post(reverse('knox_login'))
+        response = self.api_client.post(reverse('knox_login'),{'email':'harshkalal2125@gmail.com','password':'Kalal@1997'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
     
+    def test_invalid_post(self):
+        response = self.api_client.post(reverse('knox_login'),{'email':'harshkalal2125@gmail.com','password':'Kalal@2128'})
+        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)   
