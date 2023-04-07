@@ -28,6 +28,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "accounts.middleware.login_authenticate_middleware",
 ]
 ROOT_URLCONF = "filestorage.urls"
 TEMPLATES_DIR = os.path.join(BASE_DIR,'templates')
@@ -78,3 +79,4 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+LOGIN_URL = '/signin/'

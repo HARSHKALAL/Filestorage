@@ -65,6 +65,5 @@ class LoginAPIView(knox_views.LoginView):
         serializer = self.serializer_class(data=request.data)                
         if serializer.is_valid(raise_exception=True):
             user = serializer.validated_data['user']
-            login(request, user)    
             response = super().post(request,format=None)
         return Response(response.data,status=status.HTTP_200_OK)

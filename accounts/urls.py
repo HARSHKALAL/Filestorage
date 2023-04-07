@@ -9,6 +9,7 @@ urlpatterns = [
     path("api/project/",ProjectApi.as_view(),name='ProjectApi'),  
     path("api/review/",ReviewAPi.as_view(),name='ReviewApi'), 
     path("api/login/", LoginAPIView.as_view(),name='knox_login'),
+    path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
     path("api/uploadFile/",UploadFileApi.as_view(),name = 'uploadfile')
 ]
 

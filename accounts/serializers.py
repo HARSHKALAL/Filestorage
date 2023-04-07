@@ -4,6 +4,7 @@ from django.contrib.auth import  authenticate
 from .models import *
 
 class RegisterSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=255,required=False)
     confirm_password = serializers.CharField(max_length=255,write_only=True)
     date_of_birth = serializers.DateField(required=True)
     class Meta:
@@ -44,7 +45,6 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-    
         ret['photo'] = instance.reviewUploadfiles.all().values()
         return ret
 

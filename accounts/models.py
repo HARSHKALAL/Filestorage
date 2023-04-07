@@ -4,15 +4,15 @@ import pathlib
 import random
 
 class Signup(AbstractUser):
-    username = None
     date_of_birth = models.DateField(null=True)
     email= models.EmailField(unique=True)
 
     USERNAME_FIELD = 'email'    
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.email
+
 
 class Project(models.Model):
     name = models.CharField(max_length=20)
